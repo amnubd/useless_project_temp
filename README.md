@@ -84,8 +84,8 @@ Made by Aman Ubaid Said at Government Engineering College Thrissur.
 ## Project Photos
 
 
-screenshots/shy-mic-welcome.png       # Welcome screen before microphone access
-screenshots/shy-mic-calibration.png   # Live volume meter and sensitivity control
-screenshots/shy-mic-recording.png     # Recording and playback interface
+C:\Users\amanu\OneDrive\Pictures\Screenshots\shy-mic-welcome.png       # Welcome screen before microphone access
+C:\Users\amanu\OneDrive\Pictures\Screenshots\shy-mic-calibration.png   # Live volume meter and sensitivity control
+C:\Users\amanu\OneDrive\Pictures\Screenshots\shy-mic-recording.png     # Recording and playback interface
 
 
