@@ -83,20 +83,9 @@ Made by Aman Ubaid Said at Government Engineering College Thrissur.
 
 ## Project Photos
 
-Add project screenshots to a `screenshots` folder using these filenames:
 
-```text
-screenshots/
-├── shy-mic-welcome.png       # Welcome screen before microphone access
-├── shy-mic-calibration.png   # Live volume meter and sensitivity control
-└── shy-mic-recording.png     # Recording and playback interface
-```
+screenshots/shy-mic-welcome.png       # Welcome screen before microphone access
+screenshots/shy-mic-calibration.png   # Live volume meter and sensitivity control
+screenshots/shy-mic-recording.png     # Recording and playback interface
 
-Recommended README entries after adding the images:
-
-```markdown
-![The Shy Mic welcome screen](screenshots/shy-mic-welcome.png)
-![The Shy Mic calibration screen](screenshots/shy-mic-calibration.png)
-![The Shy Mic recording screen](screenshots/shy-mic-recording.png)
-```
 
