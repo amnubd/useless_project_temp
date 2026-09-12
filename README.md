@@ -102,3 +102,6 @@ screenshots/shy-mic-recording.png     # Recording and playback interface
 
 *Recording and playback interface.*
 
+## Project Demo
+
+![The Shy Mic demo](screenshots/recording.mp4)
