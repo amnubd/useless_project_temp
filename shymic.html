@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shy Mic ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdf5f0;
+            --card-bg: #fffbf9;
+            --text-dark: #4a342e;
+            --primary-pink: #ffaebd;
+            --primary-pink-hover: #ff99ab;
+            --badge-yellow: #ffecb3;
+            --border-color: #4a342e;
+            --disabled-grey: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-image: radial-gradient(#ffe0d2 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 0px rgba(74, 52, 46, 0.1);
+            width: 800px;
+            max-width: 90%;
+            display: none; /* Hidden until mic wakes up */
+            flex-direction: column;
+        }
+
+        .card-content {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        /* Cute Mic Graphic Area */
+        .mascot-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #eef7f4;
+            border-radius: 15px;
+            border: 2px dashed #b2d8ce;
+            padding: 20px;
+            position: relative;
+        }
+
+        .mic-emoji {
+            font-size: 6rem;
+            transition: transform 0.2s;
+        }
+        
+        .mic-scared {
+            transform: scale(0.9) translateY(10px) rotate(5deg);
+            filter: grayscale(0.5);
+        }
+
+        .sign {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-weight: bold;
+            box-shadow: 2px 2px 0 var(--border-color);
+            transform: rotate(10deg);
+        }
+
+        /* Controls Area */
+        .controls-area {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .title-row h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .phase-badge {
+            background: var(--badge-yellow);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 2px solid var(--border-color);
+        }
+
+        .volume-section {
+            background: #eef7f4;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #b2d8ce;
+            position: relative;
+        }
+
+        .device-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        #input-device {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            color: var(--text-dark);
+            font: inherit;
+        }
+
+        /* Rainbow Volume Bar */
+        .volume-bar-container {
+            height: 25px;
+            background: #d4e8e1;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .volume-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #4caf50, #ffeb3b, #ff9800, #f44336);
+            transition: width 0.05s linear;
+        }
+
+        /* The moving threshold marker */
+        .threshold-marker {
+            position: absolute;
+            top: -5px;
+            bottom: -5px;
+            width: 4px;
+            background: var(--text-dark);
+            left: 40%;
+            z-index: 10;
+            border-radius: 2px;
+        }
+        
+        .threshold-label {
+            position: absolute;
+            top: -25px;
+            left: 40%;
+            transform: translateX(-50%);
+            background: var(--badge-yellow);
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Custom Range Slider */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 10px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ffe3a1;
+            border: 3px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #775c55;
+            font-weight: 700;
+        }
+
+        /* Button Row */
+        .button-row {
+            display: flex;
+            gap: 15px;
+            border-top: 3px solid #f0e6e1;
+            padding-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0px rgba(74, 52, 46, 0.1);
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0px rgba(74, 52, 46, 0.1);
+        }
+
+        .btn-disabled {
+            background: var(--disabled-grey);
+            color: #9e9e9e;
+            border-color: #bdbdbd;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-pink);
+            color: var(--text-dark);
+        }
+        
+        .btn-primary:hover { background: var(--primary-pink-hover); }
+
+        .btn-record { background: #e0f7fa; }
+        .btn-stop { background: #fff3e0; }
+
+        /* Wake up screen */
+        #wake-screen {
+            text-align: center;
+        }
+        #wake-btn {
+            background: var(--badge-yellow);
+            font-size: 1.5rem;
+            padding: 20px 40px;
+            border-radius: 50px;
+        }
+
+        #playback {
+            margin-top: 20px;
+            width: 800px;
+            max-width: 90%;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">✨ The Shy Mic 🎤 ✨ - Silence is Golden! 🎵</div>
+
+    <!-- Intro Screen -->
+    <div id="wake-screen">
+        <button id="wake-btn">🎙️ Tap to Wake Up Mic!</button>
+    </div>
+
+    <!-- Main App UI -->
+    <div class="card" id="main-card">
+        <div class="card-content">
+            
+            <div class="mascot-area">
+                <div class="sign" id="mic-sign">ShHH! 🤫</div>
+                <div class="mic-emoji" id="mic-character">🎤</div>
+                <h3 id="mic-status" style="margin-top:15px; text-align:center;">I'm listening...</h3>
+            </div>
+
+            <div class="controls-area">
+                <div class="title-row">
+                    <h2>Shy Mic Recorder</h2>
+                    <span style="font-size: 1.5rem;"> 〰️ 🔊</span>
+                </div>
+                
+                <div class="phase-badge" id="phase-badge">Phase 1: Calibration Step 🛠️</div>
+                
+                <div class="volume-section" id="calibration-panel">
+                    <div class="device-row">
+                        <label for="input-device">Input device</label>
+                        <select id="input-device" aria-label="Choose microphone">
+                            <option value="">Default microphone</option>
+                        </select>
+                    </div>
+
+                    <div style="font-weight: 700; margin-bottom: 5px;">Set Volume Threshold</div>
+                    
+                    <div class="volume-bar-container">
+                        <div class="volume-fill" id="volume-fill"></div>
+                        <div class="threshold-label" id="threshold-label">🛡️ SHY POINT</div>
+                        <div class="threshold-marker" id="threshold-marker"></div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <span>🔇 Silence</span>
+                        <input type="range" id="sensitivity" min="5" max="100" value="40">
+                        <span>Loud 🔊</span>
+                    </div>
+                    <div class="subtitle">Drag me to set when I get nervous!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <button id="record-btn" class="btn-disabled" disabled>🔴 Start Recording</button>
+            <button id="stop-btn" class="btn-disabled" disabled>⏹️ Stop & Review</button>
+            <button id="lock-btn" class="btn-primary">🎙️ Lock Calibration & Start 🔒</button>
+        </div>
+    </div>
+    
+    <audio id="playback" controls></audio>
+
+    <script>
+        let isMuted = false;
+        let isRecordingPhase = false;
+        let mediaRecorder;
+        let audioChunks = [];
+        let stream;
+        let audioTrack;
+        let threshold = 40; 
+        
+        // UI Elements
+        const wakeScreen = document.getElementById('wake-screen');
+        const mainCard = document.getElementById('main-card');
+        const volumeFill = document.getElementById('volume-fill');
+        const thresholdMarker = document.getElementById('threshold-marker');
+        const thresholdLabel = document.getElementById('threshold-label');
+        const slider = document.getElementById('sensitivity');
+        const inputDevice = document.getElementById('input-device');
+        
+        const micCharacter = document.getElementById('mic-character');
+        const micSign = document.getElementById('mic-sign');
+        const micStatus = document.getElementById('mic-status');
+        const phaseBadge = document.getElementById('phase-badge');
+        const calibrationPanel = document.getElementById('calibration-panel');
+        
+        const wakeBtn = document.getElementById('wake-btn');
+        const lockBtn = document.getElementById('lock-btn');
+        const recordBtn = document.getElementById('record-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        async function populateInputDevices() {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            inputDevice.replaceChildren();
+
+            devices
+                .filter(device => device.kind === 'audioinput')
+                .forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.textContent = device.label || `Microphone ${index + 1}`;
+                    inputDevice.appendChild(option);
+                });
+        }
+
+        // Sync visual slider with threshold logic
+        slider.addEventListener('input', (e) => {
+            threshold = e.target.value;
+            const percentage = Math.min(threshold, 99) + '%';
+            thresholdMarker.style.left = percentage;
+            thresholdLabel.style.left = percentage;
+        });
+
+        // WAKE UP MIC (Replaces old "Connect" button)
+        wakeBtn.addEventListener('click', async () => {
+            stream = await navigator.mediaDevices.getUserMedia({
+                audio: inputDevice.value ? { deviceId: { exact: inputDevice.value } } : true
+            });
+            audioTrack = stream.getAudioTracks()[0];
+            await populateInputDevices();
+            
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            
+            analyser.fftSize = 256;
+            microphone.connect(analyser);
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+            // Setup Recording logic in background
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+                const playback = document.getElementById('playback');
+                playback.src = URL.createObjectURL(audioBlob);
+                playback.load();
+                playback.style.display = 'block';
+                audioChunks = []; 
+                recordBtn.className = "btn-record";
+                recordBtn.innerText = "🔴 Record Again";
+                recordBtn.disabled = false;
+            };
+
+            // Switch UI screens
+            wakeScreen.style.display = 'none';
+            mainCard.style.display = 'flex';
+
+            // Audio Analysis Loop
+            function checkVolume() {
+                if (audioTrack.readyState === 'ended') return;
+
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for(let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                // Scale volume down slightly so it fits the 0-100 range nicely
+                let currentVolume = (sum / dataArray.length) * 1.5; 
+                
+                volumeFill.style.width = Math.min(currentVolume, 100) + '%';
+
+                // MUTE LOGIC
+                if (currentVolume > threshold && !isMuted) {
+                    isMuted = true;
+                    audioTrack.enabled = false; 
+                    
+                    // Cute aesthetic changes when scared
+                    micCharacter.className = "mic-emoji mic-scared";
+                    micCharacter.innerText = "😨";
+                    micSign.innerText = "TOO LOUD!";
+                    micSign.style.color = "red";
+                    micStatus.innerText = "Ah! I'm hiding! 🫣";
+                    
+                    setTimeout(() => {
+                        isMuted = false;
+                        audioTrack.enabled = true; 
+                        
+                        // Return to normal
+                        micCharacter.className = "mic-emoji";
+                        micCharacter.innerText = "🎤";
+                        micSign.innerText = "ShHH! 🤫";
+                        micSign.style.color = "black";
+                        micStatus.innerText = isRecordingPhase ? "Recording quietly..." : "I'm listening...";
+                        
+                    }, 3000);
+                }
+                
+                requestAnimationFrame(checkVolume);
+            }
+            
+            checkVolume();
+        });
+
+        // LOCK CALIBRATION
+        lockBtn.addEventListener('click', () => {
+            calibrationPanel.style.opacity = '0.5';
+            slider.disabled = true;
+            
+            phaseBadge.innerText = "Phase 2: Ready to Record 🎙️";
+            phaseBadge.style.background = "#e0f7fa";
+
+            lockBtn.className = "btn-disabled";
+            lockBtn.disabled = true;
+            
+            recordBtn.className = "btn-record";
+            recordBtn.disabled = false;
+        });
+
+        // START RECORDING
+        recordBtn.addEventListener('click', () => {
+            isRecordingPhase = true;
+            audioChunks = [];
+            mediaRecorder.start();
+            
+            phaseBadge.innerText = "Phase 3: Recording... 🔴";
+            phaseBadge.style.background = "#ffebee";
+            micStatus.innerText = "Recording quietly...";
+
+            recordBtn.className = "btn-disabled";
+            recordBtn.disabled = true;
+            
+            stopBtn.className = "btn-stop";
+            stopBtn.disabled = false;
+        });
+
+        // STOP & REVIEW
+        stopBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+            isRecordingPhase = false;
+            
+            phaseBadge.innerText = "Finished! Listen Below 🎧";
+            phaseBadge.style.background = "#e8f5e9";
+            micStatus.innerText = "Phew, safe at last!";
+            micCharacter.innerText = "😌";
+            
+            stopBtn.className = "btn-disabled";
+            stopBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
