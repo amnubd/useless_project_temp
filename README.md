@@ -91,11 +91,15 @@ screenshots/shy-mic-calibration.png   # Live volume meter and sensitivity contro
 screenshots/shy-mic-recording.png     # Recording and playback interface
 ```
 
-After placing the images inside the repository's `screenshots` folder, use these repository-relative links:
-
-```markdown
 ![The Shy Mic welcome screen](screenshots/shy-mic-welcome.png)
+
+*Welcome screen before microphone access.*
+
 ![The Shy Mic calibration screen](screenshots/shy-mic-calibration.png)
+
+*Live volume meter and sensitivity control.*
+
 ![The Shy Mic recording screen](screenshots/shy-mic-recording.png)
-```
+
+*Recording and playback interface.*
 
