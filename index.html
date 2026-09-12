@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="The Shy Mic, a playful hackathon project by Aman Ubaid Said.">
+	<title>The Shy Mic - Silence is Golden</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--cream: #fdf5f0;
+			--paper: #fffbf9;
+			--ink: #4a342e;
+			--muted: #775c55;
+			--pink: #ffaebd;
+			--pink-dark: #d96d83;
+			--yellow: #ffecb3;
+			--mint: #e8f4ef;
+			--mint-line: #b2d8ce;
+			--line: rgba(74, 52, 46, 0.18);
+			--shadow: 0 14px 0 rgba(74, 52, 46, 0.08);
+		}
 
+		* { box-sizing: border-box; }
+
+		html { scroll-behavior: smooth; }
+
+		body {
+			margin: 0;
+			background: var(--cream);
+			color: var(--ink);
+			font-family: 'Quicksand', sans-serif;
+			overflow-x: hidden;
+		}
+
+		body::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			pointer-events: none;
+			opacity: 0.42;
+			background-image: radial-gradient(#f2cfc5 1px, transparent 1px);
+			background-size: 22px 22px;
+			mask-image: linear-gradient(to bottom, black 0%, transparent 75%);
+		}
+
+		.shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; position: relative; }
+
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 28px 0;
+			animation: rise 0.7s ease both;
+		}
+
+		.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+		.brand-mark { display: grid; place-items: center; width: 38px; height: 38px; background: var(--pink); border: 2px solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); }
+		.eyebrow, .mono { font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+		.eyebrow { color: var(--pink-dark); font-size: 0.74rem; font-weight: 500; text-transform: uppercase; }
+		nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; margin-left: 24px; }
+		nav a:hover { color: var(--pink-dark); }
+
+		.hero { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 70px; align-items: center; min-height: 650px; padding: 56px 0 86px; }
+		.hero-copy { animation: rise 0.8s 0.12s ease both; }
+		h1 { max-width: 680px; margin: 14px 0 24px; font-size: clamp(3.2rem, 7vw, 6.4rem); line-height: 0.94; letter-spacing: -0.045em; }
+		h1 em { color: var(--pink-dark); font-style: normal; }
+		.lede { max-width: 530px; color: var(--muted); font-size: 1.2rem; line-height: 1.65; }
+		.credit { margin-top: 30px; color: var(--muted); font-size: 0.9rem; }
+		.credit strong { color: var(--ink); }
+
+		.hero-art { position: relative; min-height: 420px; display: grid; place-items: center; animation: float-in 0.9s 0.2s ease both; }
+		.art-ring { position: absolute; width: min(390px, 86vw); aspect-ratio: 1; border: 2px dashed var(--mint-line); border-radius: 50%; }
+		.art-ring::before, .art-ring::after { content: ''; position: absolute; border-radius: 50%; background: var(--yellow); }
+		.art-ring::before { width: 15px; height: 15px; top: 8%; left: 18%; }
+		.art-ring::after { width: 22px; height: 22px; right: 8%; bottom: 20%; background: var(--pink); }
+		.mic-card { z-index: 1; width: min(320px, 80vw); padding: 28px; background: var(--paper); border: 3px solid var(--ink); border-radius: 28px; box-shadow: var(--shadow); transform: rotate(3deg); }
+		.mic-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+		.status { padding: 7px 10px; border: 1px solid var(--ink); border-radius: 99px; background: var(--yellow); font-size: 0.72rem; font-weight: 700; }
+		.signal { color: var(--pink-dark); font-size: 1.2rem; letter-spacing: 2px; }
+		.mic { width: 112px; height: 170px; margin: 0 auto 24px; position: relative; display: grid; place-items: center; border: 6px solid var(--ink); border-radius: 58px; background: var(--pink); box-shadow: inset 0 -12px 0 rgba(217, 109, 131, 0.18); }
+		.mic::before { content: ''; position: absolute; left: 50%; bottom: -42px; width: 80px; height: 60px; border: 6px solid var(--ink); border-top: 0; border-radius: 0 0 45px 45px; transform: translateX(-50%); }
+		.mic::after { content: ''; position: absolute; bottom: -43px; left: 50%; width: 6px; height: 30px; background: var(--ink); transform: translateX(-50%); }
+		.mic-face { font-size: 2rem; transform: translateY(-10px); }
+		.art-caption { margin: 50px 0 0; text-align: center; color: var(--muted); font-size: 0.92rem; }
+
+		section { padding: 92px 0; border-top: 1px solid var(--line); }
+		.section-heading { max-width: 610px; margin-bottom: 42px; }
+		h2 { margin: 10px 0 12px; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1; letter-spacing: -0.04em; }
+		.section-heading p { color: var(--muted); line-height: 1.65; }
+		.details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+		.detail { min-height: 170px; padding: 24px; border: 2px solid var(--ink); border-radius: 18px; background: var(--paper); box-shadow: 6px 6px 0 var(--mint-line); }
+		.detail:nth-child(2) { transform: translateY(18px); box-shadow: 6px 6px 0 var(--pink); }
+		.detail:nth-child(3) { box-shadow: 6px 6px 0 var(--yellow); }
+		.detail h3 { margin: 14px 0 8px; font-size: 1.2rem; }
+		.detail p { margin: 0; color: var(--muted); line-height: 1.55; }
+		.detail .mono { color: var(--pink-dark); font-size: 0.75rem; }
+
+		.project-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 70px; align-items: start; }
+		.project-copy p { color: var(--muted); line-height: 1.7; font-size: 1.05rem; }
+		.stack { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+		.stack span { padding: 9px 13px; border: 1px solid var(--ink); border-radius: 99px; background: var(--mint); font-size: 0.82rem; font-weight: 700; }
+		.flow { display: grid; gap: 12px; }
+		.flow-step { display: grid; grid-template-columns: 52px 1fr; gap: 18px; align-items: center; padding: 18px; border-bottom: 1px solid var(--line); }
+		.flow-number { display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); font-weight: 700; }
+		.flow-step strong { display: block; margin-bottom: 4px; }
+		.flow-step span { color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+
+		.cta { padding: 105px 0 120px; text-align: center; }
+		.cta-panel { padding: 58px 24px; border: 3px solid var(--ink); border-radius: 28px; background: var(--pink); box-shadow: 10px 10px 0 var(--ink); }
+		.cta-panel h2 { max-width: 600px; margin: 10px auto 28px; }
+		.launch { display: inline-flex; align-items: center; gap: 10px; padding: 16px 24px; border: 3px solid var(--ink); border-radius: 14px; background: var(--paper); color: var(--ink); font-weight: 700; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
+		.launch:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+		.demo-video { padding: 0 0 105px; }
+		.demo-video video { display: block; width: 100%; max-width: 860px; margin: 0 auto; border: 3px solid var(--ink); border-radius: 18px; background: #241c1a; box-shadow: 8px 8px 0 var(--mint-line); }
+		footer { padding: 24px 0 34px; color: var(--muted); font-size: 0.82rem; text-align: center; }
+
+		@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+		@keyframes float-in { from { opacity: 0; transform: translateY(22px) rotate(-2deg); } to { opacity: 1; transform: translateY(0) rotate(0); } }
+
+		@media (max-width: 780px) {
+			.shell { width: min(100% - 28px, 620px); }
+			header { padding: 20px 0; }
+			nav { display: none; }
+			.hero { grid-template-columns: 1fr; gap: 20px; min-height: auto; padding: 62px 0 78px; }
+			h1 { font-size: clamp(3.4rem, 16vw, 5.4rem); }
+			.lede { font-size: 1.05rem; }
+			.hero-art { min-height: 370px; }
+			section { padding: 70px 0; }
+			.details-grid, .project-grid { grid-template-columns: 1fr; gap: 16px; }
+			.detail:nth-child(2) { transform: none; }
+			.project-grid { gap: 42px; }
+			.cta { padding: 80px 0 92px; }
+		}
+	</style>
+</head>
+<body>
+	<header class="shell">
+		<div class="brand"><span class="brand-mark" aria-hidden="true">🎤</span><span>The Shy Mic</span></div>
+		<nav aria-label="Main navigation">
+			<a href="#hackathon">Hackathon</a>
+			<a href="#project">The idea</a>
+		</nav>
+	</header>
+
+	<main>
+		<section class="hero shell" aria-labelledby="hero-title">
+			<div class="hero-copy">
+				<p class="eyebrow">A tiny experiment in loudness</p>
+				<h1 id="hero-title">The Shy Mic<br><em>Silence is golden.</em></h1>
+				<p class="lede">Meet the microphone that gets nervous. When the room gets too loud, it politely mutes itself and hides for a moment.</p>
+				<p class="credit">Built by <strong>Aman Ubaid Said</strong> · Government Engineering College Thrissur</p>
+			</div>
+			<div class="hero-art" aria-label="Illustration of a shy microphone">
+				<div class="art-ring"></div>
+				<div class="mic-card">
+					<div class="mic-card-top"><span class="status">LISTENING...</span><span class="signal">〰〰</span></div>
+					<div class="mic"><span class="mic-face">•ᴗ•</span></div>
+					<p class="art-caption">Please keep it down. I am trying my best.</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="hackathon">
+			<div class="shell">
+				<div class="section-heading">
+					<p class="eyebrow">The setting</p>
+					<h2>Made for a room full of curious minds.</h2>
+					<p>A solo project created for <strong>Useless Projects</strong> at Government Engineering College Thrissur on <strong>11-12 April 2026</strong>.</p>
+				</div>
+				<div class="details-grid">
+					<article class="detail"><span class="mono">01 / EVENT</span><h3>Useless Projects</h3><p>A place to turn odd ideas into working prototypes.</p></article>
+					<article class="detail"><span class="mono">02 / HOME</span><h3>GEC Thrissur</h3><p>Built at Government Engineering College Thrissur.</p></article>
+					<article class="detail"><span class="mono">03 / WHEN</span><h3>11-12 April 2026</h3><p>A small experiment with a surprisingly strong personality.</p></article>
+				</div>
+			</div>
+		</section>
+
+		<section id="project">
+			<div class="shell project-grid">
+				<div class="project-copy">
+					<p class="eyebrow">The counter-intuitive bit</p>
+					<h2>A mic that knows when to stop.</h2>
+					<p>Most microphones are designed to capture everything. The Shy Mic does the opposite: it watches the sound level, and when a user-defined threshold is crossed, it mutes itself for three seconds before bravely returning.</p>
+					<p>It is part recorder, part experiment, and entirely unnecessary in the best possible way.</p>
+					<div class="stack" aria-label="Technology stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Web Audio API</span><span>MediaRecorder</span></div>
+				</div>
+				<div class="flow" aria-label="How the project works">
+					<div class="flow-step"><div class="flow-number">1</div><div><strong>Wake the mic</strong><span>Request microphone access after a deliberate button press.</span></div></div>
+					<div class="flow-step"><div class="flow-number">2</div><div><strong>Set the shy point</strong><span>Use the slider to decide how much sound is too much.</span></div></div>
+					<div class="flow-step"><div class="flow-number">3</div><div><strong>Record and review</strong><span>Capture the moment, then listen back in the browser.</span></div></div>
+				</div>
+			</div>
+		</section>
+
+		<section class="cta shell" aria-labelledby="cta-title">
+			<div class="cta-panel">
+				<p class="eyebrow">Ready when you are</p>
+				<h2 id="cta-title">Give the mic a quiet little job.</h2>
+				<a class="launch" href="shymic.html">Launch Application 🚀</a>
+			</div>
+		</section>
+
+		<section class="demo-video shell" aria-labelledby="demo-title">
+			<div class="section-heading">
+				<p class="eyebrow">Watch it in action</p>
+				<h2 id="demo-title">A quick demo of The Shy Mic.</h2>
+			</div>
+			<video controls preload="metadata">
+				<source src="recording.mp4" type="video/mp4">
+				Your browser does not support video playback.
+			</video>
+		</section>
+	</main>
+
+	<footer>© 2026 Aman Ubaid Said · The Shy Mic</footer>
+</body>
+</html>
