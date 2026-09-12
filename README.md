@@ -3,8 +3,7 @@
 ## Basic Details
 
 ### Team Name
-Solo Project
-
+Aman Ubaid's Team
 ### Team Member
 - Aman Ubaid Said - Government Engineering College Thrissur
 
