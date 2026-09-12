@@ -102,6 +102,9 @@ screenshots/shy-mic-recording.png     # Recording and playback interface
 
 *Recording and playback interface.*
 
-## Project Demo
+## Demo Video
 
-![The Shy Mic demo](screenshots/recording.mp4)
+<video controls width="720">
+	<source src="recording.mp4" type="video/mp4">
+	Your browser does not support video playback.
+</video>

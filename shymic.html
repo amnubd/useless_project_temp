@@ -131,6 +131,25 @@
             position: relative;
         }
 
+        .device-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        #input-device {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            color: var(--text-dark);
+            font: inherit;
+        }
+
         /* Rainbow Volume Bar */
         .volume-bar-container {
             height: 25px;
@@ -303,6 +322,13 @@
                 <div class="phase-badge" id="phase-badge">Phase 1: Calibration Step 🛠️</div>
                 
                 <div class="volume-section" id="calibration-panel">
+                    <div class="device-row">
+                        <label for="input-device">Input device</label>
+                        <select id="input-device" aria-label="Choose microphone">
+                            <option value="">Default microphone</option>
+                        </select>
+                    </div>
+
                     <div style="font-weight: 700; margin-bottom: 5px;">Set Volume Threshold</div>
                     
                     <div class="volume-bar-container">
@@ -346,6 +372,7 @@
         const thresholdMarker = document.getElementById('threshold-marker');
         const thresholdLabel = document.getElementById('threshold-label');
         const slider = document.getElementById('sensitivity');
+        const inputDevice = document.getElementById('input-device');
         
         const micCharacter = document.getElementById('mic-character');
         const micSign = document.getElementById('mic-sign');
@@ -358,6 +385,20 @@
         const recordBtn = document.getElementById('record-btn');
         const stopBtn = document.getElementById('stop-btn');
 
+        async function populateInputDevices() {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            inputDevice.replaceChildren();
+
+            devices
+                .filter(device => device.kind === 'audioinput')
+                .forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.textContent = device.label || `Microphone ${index + 1}`;
+                    inputDevice.appendChild(option);
+                });
+        }
+
         // Sync visual slider with threshold logic
         slider.addEventListener('input', (e) => {
             threshold = e.target.value;
@@ -368,8 +409,11 @@
 
         // WAKE UP MIC (Replaces old "Connect" button)
         wakeBtn.addEventListener('click', async () => {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream = await navigator.mediaDevices.getUserMedia({
+                audio: inputDevice.value ? { deviceId: { exact: inputDevice.value } } : true
+            });
             audioTrack = stream.getAudioTracks()[0];
+            await populateInputDevices();
             
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const analyser = audioContext.createAnalyser();
@@ -383,11 +427,15 @@
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
             mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
                 const playback = document.getElementById('playback');
                 playback.src = URL.createObjectURL(audioBlob);
+                playback.load();
                 playback.style.display = 'block';
                 audioChunks = []; 
+                recordBtn.className = "btn-record";
+                recordBtn.innerText = "🔴 Record Again";
+                recordBtn.disabled = false;
             };
 
             // Switch UI screens
@@ -456,6 +504,7 @@
         // START RECORDING
         recordBtn.addEventListener('click', () => {
             isRecordingPhase = true;
+            audioChunks = [];
             mediaRecorder.start();
             
             phaseBadge.innerText = "Phase 3: Recording... 🔴";
@@ -472,7 +521,7 @@
         // STOP & REVIEW
         stopBtn.addEventListener('click', () => {
             mediaRecorder.stop();
-            stream.getTracks().forEach(track => track.stop()); // Turn off hardware mic
+            isRecordingPhase = false;
             
             phaseBadge.innerText = "Finished! Listen Below 🎧";
             phaseBadge.style.background = "#e8f5e9";
