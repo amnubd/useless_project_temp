@@ -83,7 +83,6 @@ Made by Aman Ubaid Said at Government Engineering College Thrissur.
 
 ## Project Photos
 
-Add project screenshots to a `screenshots` folder using these filenames:
 
 ```text
 screenshots/shy-mic-welcome.png       # Welcome screen before microphone access
