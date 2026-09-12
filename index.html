@@ -113,6 +113,8 @@
 		.cta-panel h2 { max-width: 600px; margin: 10px auto 28px; }
 		.launch { display: inline-flex; align-items: center; gap: 10px; padding: 16px 24px; border: 3px solid var(--ink); border-radius: 14px; background: var(--paper); color: var(--ink); font-weight: 700; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
 		.launch:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+		.demo-video { padding: 0 0 105px; }
+		.demo-video video { display: block; width: 100%; max-width: 860px; margin: 0 auto; border: 3px solid var(--ink); border-radius: 18px; background: #241c1a; box-shadow: 8px 8px 0 var(--mint-line); }
 		footer { padding: 24px 0 34px; color: var(--muted); font-size: 0.82rem; text-align: center; }
 
 		@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
@@ -199,6 +201,17 @@
 				<h2 id="cta-title">Give the mic a quiet little job.</h2>
 				<a class="launch" href="shymic.html">Launch Application 🚀</a>
 			</div>
+		</section>
+
+		<section class="demo-video shell" aria-labelledby="demo-title">
+			<div class="section-heading">
+				<p class="eyebrow">Watch it in action</p>
+				<h2 id="demo-title">A quick demo of The Shy Mic.</h2>
+			</div>
+			<video controls preload="metadata">
+				<source src="recording.mp4" type="video/mp4">
+				Your browser does not support video playback.
+			</video>
 		</section>
 	</main>
 
